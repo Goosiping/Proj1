@@ -3,4 +3,5 @@
 using namespace std;
 int main(){
     cout<<"Success"<<endl;
+    cout<<"Revised"<<endl;
 }
