@@ -1,5 +1,6 @@
 #include<iostream>
 #include<fstream>
+#include<cstring>
 using namespace std;
 
 int t1[4][4] = {{0, 0, 0, 0}, {0, 0, 0, 0}, {1, 1, 1, 0}, {0, 1, 0, 0}};
@@ -29,36 +30,33 @@ int i2[4][4] = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {1, 1, 1, 1}};
 int o[4][4] = {{0, 0, 0, 0}, {0, 0, 0, 0}, {1, 1, 0, 0}, {1, 1, 0, 0}};
 
 int main(){
-    int col, row;
-    col = 10;
-    row = 5;
-    int map[col][row];
-    for(int i = 0; i < col; i++){
-        for(int j = 0; j < row; j++){
-            map[i][j] = 0;
-        }
-    }
-    /*ifstream inf("108034017_proj1.data", ios::in);
-    if(!inf) {
+    int col = 0;
+    int row = 0;
+    
+    //open file
+    ifstream Infile;
+    Infile.open("108034017_proj1.data", fstream::in);
+    if(!Infile.is_open()) {
         cout<<"Error:Failed to open input file."<<endl;
         return 1;
     }
-
-    string temp;
-    while(!inf.eof()){
-        inf>>temp;
-        if(temp == "End") break;
-        else cout<<temp<<endl;
-    }*/
-
-    string shape;
-    int pos, mov;
-    cin>>shape>>pos>>mov;
-    if(shape == "T1"){
+    
+    //start loop
+    char temp[4];
+    int num;
+    while(Infile>>temp && strcmp(temp, "End") != 0){
         
+        //init map
+        if(row == 0 && col == 0){
+            row = temp;
+            Infile>>col;
+            int map[row][col];
+        }
+        
+        else{
+            
+        }
     }
-    else{
-        cout<<"error"<<endl;
-    }
+    
     
 }
