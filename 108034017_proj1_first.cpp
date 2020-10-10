@@ -29,7 +29,16 @@ bool i2[4][4] = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {1, 1, 1, 1}};
 
 bool o[4][4] = {{0, 0, 0, 0}, {0, 0, 0, 0}, {1, 1, 0, 0}, {1, 1, 0, 0}};
 
+void SetBlock(bool source[4][4], bool aim[4][4]){
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 4; j++){
+            aim[i][j] = source[i][j];
+        }
+    }
+}
+
 int main(){
+    static bool **puzzle;
     int col = 0;
     int row = 0;
     
@@ -44,6 +53,7 @@ int main(){
     //start loop
     char temp[4];
     int move;
+    int pos;
     while(Infile>>temp && strcmp(temp, "End") != 0){
         
         //init map
@@ -51,20 +61,60 @@ int main(){
             row = 10 * (temp[0] - 48) + temp[1] - 48;
             Infile>>col;
             cout<<row<<" "<<col<<endl;
-            static int map[row][col];
+            puzzle = new bool *[row];
+            for(int i = 0; i < row; i++){
+                puzzle[i] = new bool [col];
+            }
             for(int i = 0; i < row; i++){
                 for(int j = 0; j < col; j++){
-                    map[i][j] = 0;
+                    puzzle[i][j] = 0;
                 }
+            }
+
+            //Test:print map
+            for(int i = 0; i < row; i++){
+                for(int j = 0; j < col; j++){
+                    cout<<puzzle[i][j];
+                }
+                cout<<endl;
             }
         }
         
+        //put the block
         else{
-            Infile>>move;
+            Infile>>pos>>move;
+            pos--;
             bool block[4][4];
-            if(temp = )
+            int rh = -1;
+            //judge the block
+            if(strcmp(temp, "T1") == 0){
+                SetBlock(t1, block);
+            }
+            else{
+                SetBlock(o, block);
+            }
+
+            //start position out of range
+            bool legal = true;
+            if(pos >= col){
+                legal = false;
+                cout<<"Error:"<<temp<<" Starting Position Out of Range"<<pos<<endl;
+                continue;
+            }
+            int height = 0;
+            while(legal){
+                //continue to fall
+                for(int i = 0; i < (height >= 4) ? 4 : height && legal; i++){
+                    for(int j = 0; j < 4; j++){
+                        
+                        
+                        }
+                    }
+                    
+                }
+            }
         }
     }
-    
-    
+    //close the file
+    Infile.close();
 }
