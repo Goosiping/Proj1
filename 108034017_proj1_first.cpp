@@ -55,7 +55,6 @@ int main(){
     int move;
     int pos;
     while(Infile>>temp && strcmp(temp, "End") != 0){
-        
         //init map
         if(row == 0 && col == 0){
             row = 10 * (temp[0] - 48) + temp[1] - 48;
@@ -82,10 +81,13 @@ int main(){
         
         //put the block
         else{
+            //Test
+            cout<<"b";
             Infile>>pos>>move;
             pos--;
             bool block[4][4];
             int rh = -1;
+            bool legal = true;
             //judge the block
             if(strcmp(temp, "T1") == 0){
                 SetBlock(t1, block);
@@ -94,27 +96,48 @@ int main(){
                 SetBlock(o, block);
             }
 
-            //start position out of range
-            bool legal = true;
-            if(pos >= col){
-                legal = false;
-                cout<<"Error:"<<temp<<" Starting Position Out of Range"<<pos<<endl;
-                continue;
-            }
             int height = 0;
-            while(legal){
+            while(legal || height <= row){
                 //continue to fall
+                //Test
+                cout<<"f";
                 for(int i = 0; i < (height >= 4) ? 4 : height && legal; i++){
                     for(int j = 0; j < 4; j++){
-                        
-                        
+                        if(block[3 - i][j] == 1 && puzzle[height + i][pos + j] == 1){
+                            legal = false;
+                            continue;
                         }
                     }
-                    
+                }
+                rh = height;
+                height ++;
+            }
+            //put the block
+            if(rh > 0){
+                for(int a = 0; a < 4; a ++){
+                    for(int b = 0; b < 4; b++){
+                        if(block[a][b] == 1){
+                            puzzle[rh + a][pos + b] = 1;
+                        }
+                    }
                 }
             }
+            else{
+                cout<<"Error:Wrong Height"<<rh<<endl;
+            }
         }
+        //Test
+        cout<<"e";
+    }
+    //Test
+    cout<<endl;
+    for(int i = 0; i < row; i++){
+        for(int j = 0; j < col; j++){
+            cout<<puzzle[i][j]<<" ";
+        }
+        cout<<endl;
     }
     //close the file
     Infile.close();
 }
+
