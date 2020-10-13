@@ -59,6 +59,7 @@ int main(){
         if(row == 0 && col == 0){
             row = 10 * (temp[0] - 48) + temp[1] - 48;
             Infile>>col;
+            //Test
             cout<<row<<" "<<col<<endl;
             puzzle = new bool *[row];
             for(int i = 0; i < row; i++){
@@ -71,53 +72,111 @@ int main(){
             }
 
             //Test:print map
-            for(int i = 0; i < row; i++){
+            /*for(int i = 0; i < row; i++){
                 for(int j = 0; j < col; j++){
                     cout<<puzzle[i][j];
                 }
                 cout<<endl;
-            }
+            }*/
         }
         
         //put the block
         else{
-            //Test
-            cout<<"b";
             Infile>>pos>>move;
             pos--;
             bool block[4][4];
             int rh = -1;
             bool legal = true;
             //judge the block
+            //t
             if(strcmp(temp, "T1") == 0){
                 SetBlock(t1, block);
             }
-            else{
+            else if(strcmp(temp, "T2") == 0){
+                SetBlock(t2, block);
+            }
+            else if(strcmp(temp, "T3") == 0){
+                SetBlock(t3, block);
+            }
+            else if(strcmp(temp, "T4") == 0){
+                SetBlock(t4, block);
+            }
+            //l
+            else if(strcmp(temp, "L1") == 0){
+                SetBlock(l1, block);
+            }
+            else if(strcmp(temp, "L2") == 0){
+                SetBlock(l2, block);
+            }
+            else if(strcmp(temp, "L3") == 0){
+                SetBlock(l3, block);
+            }
+            else if(strcmp(temp, "L4") == 0){
+                SetBlock(l4, block);
+            }
+            //j
+            else if(strcmp(temp, "J1") == 0){
+                SetBlock(j1, block);
+            }
+            else if(strcmp(temp, "J2") == 0){
+                SetBlock(j2, block);
+            }
+            else if(strcmp(temp, "J3") == 0){
+                SetBlock(j3, block);
+            }
+            else if(strcmp(temp, "J4") == 0){
+                SetBlock(j4, block);
+            }
+            //s
+            else if(strcmp(temp, "S1") == 0){
+                SetBlock(s1, block);
+            }
+            else if(strcmp(temp, "S2") == 0){
+                SetBlock(s2, block);
+            }
+            //z
+            else if(strcmp(temp, "Z1") == 0){
+                SetBlock(z1, block);
+            }
+            else if(strcmp(temp, "Z2") == 0){
+                SetBlock(z2, block);
+            }
+            //o
+            else if(strcmp(temp, "O") == 0){
                 SetBlock(o, block);
+            }
+            else if(strcmp(temp, "I1") == 0){
+                SetBlock(i1, block);
+            }
+            //i
+            else if(strcmp(temp, "I2") == 0){
+                SetBlock(i2, block);
+            }
+            else{
+                cout << "Error:invalid block" << endl;
             }
 
             int height = 0;
-            while(legal || height <= row){
+            while(legal && height < row){
                 //continue to fall
-                //Test
-                cout<<"f";
-                for(int i = 0; i < (height >= 4) ? 4 : height && legal; i++){
+                for(int i = 0; i < ((height >= 4) ? 4 : height + 1) ; i++){
                     for(int j = 0; j < 4; j++){
-                        if(block[3 - i][j] == 1 && puzzle[height + i][pos + j] == 1){
+                        if(block[3 - i][j] == 1 && puzzle[height - i][pos + j] == 1){
                             legal = false;
-                            continue;
                         }
                     }
                 }
-                rh = height;
-                height ++;
+                if(legal){
+                    rh = height;
+                    height ++; 
+                }
             }
             //put the block
             if(rh > 0){
                 for(int a = 0; a < 4; a ++){
                     for(int b = 0; b < 4; b++){
-                        if(block[a][b] == 1){
-                            puzzle[rh + a][pos + b] = 1;
+                        if(block[3 - a][b]){
+                            puzzle[rh - a][pos + b] = 1;
                         }
                     }
                 }
@@ -125,18 +184,42 @@ int main(){
             else{
                 cout<<"Error:Wrong Height"<<rh<<endl;
             }
+            //check line
+            int line[row];
+            int num_line = 0;
+            for (int i = 0; i < row; i++)
+                line[i] = -1;
+            //record remove lines
+            for (int i = 0; i < row; i++){
+                for (int j = 0; j < col; j++){
+                    if(!puzzle[i][j]){
+                        break;
+                    }
+                    else if(j == col - 1 && puzzle[i][j]){
+                        line[num_line++] = i;
+                        cout << i << endl;
+                    }
+                }
+            }
+            //blocks drop
+            for (int a = 0; line[a] != -1; a++){
+                for (int i = line[a]; i > 0; i--){
+                    for (int j = 0; j < col; j++){
+                        puzzle[i][j] = puzzle[i - 1][j];
+                    }
+                }
+            }
         }
-        //Test
-        cout<<"e";
-    }
-    //Test
-    cout<<endl;
-    for(int i = 0; i < row; i++){
-        for(int j = 0; j < col; j++){
-            cout<<puzzle[i][j]<<" ";
+        cout<<"*************************"<<endl;
+        for(int i = 0; i < row; i++){
+            for(int j = 0; j < col; j++){
+                cout<<puzzle[i][j]<<" ";
+            }
+            cout<<endl;
         }
-        cout<<endl;
+        
     }
+    
     //close the file
     Infile.close();
 }
