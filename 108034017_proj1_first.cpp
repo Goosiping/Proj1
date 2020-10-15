@@ -37,27 +37,33 @@ void SetBlock(bool source[4][4], bool aim[4][4]){
     }
 }
 
-int main(){
+int main(int argc, char* argv[]){
     static bool **puzzle;
     int col = 0;
     int row = 0;
     
     //open file
     ifstream Infile;
-    Infile.open("108034017_proj1.data", fstream::in);
+    Infile.open(argv[1], fstream::in);
     if(!Infile.is_open()) {
         cout<<"Error:Failed to open input file."<<endl;
         return 1;
     }
     
     //start loop
+    
     char temp[4];
     int move;
     int pos;
     while(Infile>>temp && strcmp(temp, "End") != 0){
         //init map
         if(row == 0 && col == 0){
-            row = 10 * (temp[0] - 48) + temp[1] - 48;
+            if(temp[1] >= 48 && temp[1] <= 58){
+                row = 10 * (temp[0] - 48) + temp[1] - 48;
+            }
+            else{
+                row = temp[0] - 48;
+            }
             Infile>>col;
             //Test
             cout<<row<<" "<<col<<endl;
@@ -86,6 +92,7 @@ int main(){
             pos--;
             bool block[4][4];
             int rh = -1;
+            int rm = 0;
             bool legal = true;
             //judge the block
             //t
@@ -173,6 +180,53 @@ int main(){
             }
             //put the block
             if(rh > 0){
+                if(move > 0){
+                    for (int a = 1; a <= move; a++){
+                        for (int i = 0; i < 4; i++){
+                            for (int j = 0; j < 4; j++){
+                                //prevent hitting the wall
+                                if( !(block[3 - i][j] && puzzle[rh - i][pos + j + a])){
+                                    rm = a;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if(move < 0){
+                    for (int a = -1; a >= move; a--){
+                        for (int i = 0; i < 4; i++){
+                            for (int j = 0; j < 4; j++){
+                                if( !(block[3 - i][j] && puzzle[rh - i][pos + j + a])){
+                                    rm = a;
+                                }
+                            }
+                        }
+                    }
+                }
+                else{
+                    rm = 0;
+                }
+                //fall after move
+                legal = true;
+                pos += rm;
+                while(legal && height < row){
+                //continue to fall
+                for (int i = 0; i < ((height >= 4) ? 4 : height + 1); i++)
+                {
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (block[3 - i][j] == 1 && puzzle[height - i][pos + j] == 1)
+                        {
+                            legal = false;
+                        }
+                    }
+                    }
+                    if(legal){
+                        rh = height;
+                        height ++; 
+                    }
+                }
+                //actually put the block
                 for(int a = 0; a < 4; a ++){
                     for(int b = 0; b < 4; b++){
                         if(block[3 - a][b]){
@@ -197,7 +251,7 @@ int main(){
                     }
                     else if(j == col - 1 && puzzle[i][j]){
                         line[num_line++] = i;
-                        cout << i << endl;
+                        //cout << i << endl;
                     }
                 }
             }
@@ -210,17 +264,23 @@ int main(){
                 }
             }
         }
-        cout<<"*************************"<<endl;
-        for(int i = 0; i < row; i++){
+    }
+    for(int i = 0; i < row; i++){
             for(int j = 0; j < col; j++){
                 cout<<puzzle[i][j]<<" ";
             }
             cout<<endl;
         }
-        
-    }
-    
-    //close the file
-    Infile.close();
+    //output file
+        fstream Outfile;
+        Outfile.open("108034017_proj1.final", fstream::out);
+        for (int i = 0; i < row; i++){
+            for (int j = 0; j < col; j++){
+                Outfile << puzzle[i][j] << " ";
+            }
+            Outfile << endl;
+        }
+            //close the file
+            Infile.close();
+            Outfile.close();
 }
-
