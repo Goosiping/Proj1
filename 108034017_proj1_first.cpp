@@ -11,7 +11,7 @@ bool t4[4][4] = {{0, 0, 0, 0}, {1, 0, 0, 0}, {1, 1, 0, 0}, {1, 0, 0, 0}};
 bool l1[4][4] = {{0, 0, 0, 0}, {1, 0, 0, 0}, {1, 0, 0, 0}, {1, 1, 0, 0}};
 bool l2[4][4] = {{0, 0, 0, 0}, {0, 0, 0, 0}, {1, 1, 1, 0}, {1, 0, 0, 0}};
 bool l3[4][4] = {{0, 0, 0, 0}, {1, 1, 0, 0}, {0, 1, 0, 0}, {0, 1, 0, 0}};
-bool l4[4][4] = {{0, 0, 0, 0}, {0, 0, 0, 0}, {1, 1, 1, 0}, {0, 0, 1, 0}};
+bool l4[4][4] = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 1, 0}, {1, 1, 1, 0}};
 
 bool j1[4][4] = {{0, 0, 0, 0}, {0, 1, 0, 0}, {0, 1, 0, 0}, {1, 1, 0, 0}};
 bool j2[4][4] = {{0, 0, 0, 0}, {0, 0, 0, 0}, {1, 0, 0, 0}, {1, 1, 1, 0}};
@@ -65,8 +65,7 @@ int main(int argc, char* argv[]){
                 row = temp[0] - 48;
             }
             Infile>>col;
-            //Test
-            cout<<row<<" "<<col<<endl;
+            row += 4;
             puzzle = new bool *[row];
             for(int i = 0; i < row; i++){
                 puzzle[i] = new bool [col];
@@ -76,9 +75,9 @@ int main(int argc, char* argv[]){
                     puzzle[i][j] = 0;
                 }
             }
-
+            /*
             //Test:print map
-            /*for(int i = 0; i < row; i++){
+            for(int i = 0; i < row; i++){
                 for(int j = 0; j < col; j++){
                     cout<<puzzle[i][j];
                 }
@@ -95,7 +94,6 @@ int main(int argc, char* argv[]){
             int rm = 0;
             bool legal = true;
             //judge the block
-            //t
             if(strcmp(temp, "T1") == 0){
                 SetBlock(t1, block);
             }
@@ -162,7 +160,6 @@ int main(int argc, char* argv[]){
             else{
                 cout << "Error:invalid block" << endl;
             }
-
             int height = 0;
             while(legal && height < row){
                 //continue to fall
@@ -196,6 +193,8 @@ int main(int argc, char* argv[]){
                     for (int a = -1; a >= move; a--){
                         for (int i = 0; i < 4; i++){
                             for (int j = 0; j < 4; j++){
+                                //if(rh - i < 0)
+                                    //break;
                                 if( !(block[3 - i][j] && puzzle[rh - i][pos + j + a])){
                                     rm = a;
                                 }
@@ -211,15 +210,15 @@ int main(int argc, char* argv[]){
                 pos += rm;
                 while(legal && height < row){
                 //continue to fall
-                for (int i = 0; i < ((height >= 4) ? 4 : height + 1); i++)
-                {
-                    for (int j = 0; j < 4; j++)
+                    for (int i = 0; i < ((height >= 4) ? 4 : height + 1); i++)
                     {
-                        if (block[3 - i][j] == 1 && puzzle[height - i][pos + j] == 1)
+                        for (int j = 0; j < 4; j++)
                         {
-                            legal = false;
+                            if (block[3 - i][j] == 1 && puzzle[height - i][pos + j] == 1)
+                            {
+                                legal = false;
+                            }
                         }
-                    }
                     }
                     if(legal){
                         rh = height;
@@ -238,7 +237,18 @@ int main(int argc, char* argv[]){
             else{
                 cout<<"Error:Wrong Height"<<rh<<endl;
             }
-            //check line
+            //Test:see the process
+            /*
+            cout <<"Block:"<<temp <<" "<< pos<<" "<<move<< endl;
+            for (int i = 0; i < row; i++){
+                for (int j = 0; j < col; j++){
+                    cout << puzzle[i][j] << " ";
+                }
+                cout << endl;
+            }
+            cout << endl;
+            */
+            //check line0.
             int line[row];
             int num_line = 0;
             for (int i = 0; i < row; i++)
@@ -257,15 +267,20 @@ int main(int argc, char* argv[]){
             }
             //blocks drop
             for (int a = 0; line[a] != -1; a++){
-                for (int i = line[a]; i > 0; i--){
+                for (int i = line[a]; i >= 0; i--){
                     for (int j = 0; j < col; j++){
-                        puzzle[i][j] = puzzle[i - 1][j];
+                        if(i - 1 < 0){
+                            puzzle[i][j] = 0;
+                        }
+                        else{
+                            puzzle[i][j] = puzzle[i - 1][j];
+                        }
                     }
                 }
             }
         }
     }
-    for(int i = 0; i < row; i++){
+        for(int i = 4; i < row; i++){
             for(int j = 0; j < col; j++){
                 cout<<puzzle[i][j]<<" ";
             }
@@ -274,7 +289,7 @@ int main(int argc, char* argv[]){
     //output file
         fstream Outfile;
         Outfile.open("108034017_proj1.final", fstream::out);
-        for (int i = 0; i < row; i++){
+        for (int i = 4; i < row; i++){
             for (int j = 0; j < col; j++){
                 Outfile << puzzle[i][j] << " ";
             }
